@@ -1,0 +1,17 @@
+[package]
+name = "crayfish-program"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[features]
+default = ["solana-nostd-entrypoint"]
+pinocchio = ["dep:pinocchio", "pinocchio-system"]
+
+[dependencies]
+pinocchio = { workspace = true, optional = true }
+pinocchio-system = { workspace = true, optional = true }
+solana-nostd-entrypoint = { workspace = true, optional = true }

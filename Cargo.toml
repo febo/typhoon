@@ -1,0 +1,33 @@
+[workspace]
+members = ["crates/*", "examples/counter"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+rust-version = "1.81"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["Jean Marchand"]
+repository = "https://github.com/rust-lang/rust-analyzer"
+
+[workspace.dependencies]
+bytemuck = "1.19"
+crayfish-accounts = { version = "0.1.0", path = "crates/accounts" }
+crayfish-context = { version = "0.1.0", path = "crates/context" }
+crayfish-context-macro = { version = "0.1.0", path = "crates/context-macro" }
+crayfish-errors = { version = "0.1.0", path = "crates/errors" }
+crayfish-handler-macro = { version = "0.1.0", path = "crates/handler-macro" }
+crayfish-program = { version = "0.1.0", path = "crates/program" }
+crayfish-space-macro = { version = "0.1.0", path = "crates/space-macro" }
+crayfish-syn = { version = "0.1.0", path = "crates/syn" }
+num-traits = "0.2"
+paste = "1.0"
+pinocchio = { git = "https://github.com/febo/pinocchio" }
+pinocchio-pubkey = { git = "https://github.com/febo/pinocchio" }
+pinocchio-system = { git = "https://github.com/febo/pinocchio" }
+proc-macro2 = "1.0"
+quote = "1.0"
+solana-nostd-entrypoint = { git = "https://github.com/Aursen/solana-nostd-entrypoint", branch = "temp" }
+solana-program = "1.18"
+syn = "2.0"
+thiserror = "1.0"

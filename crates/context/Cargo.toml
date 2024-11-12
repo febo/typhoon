@@ -1,0 +1,13 @@
+[package]
+name = "crayfish-context"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+bytemuck.workspace = true
+crayfish-program.workspace = true
+paste.workspace = true

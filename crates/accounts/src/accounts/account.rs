@@ -1,0 +1,68 @@
+use std::marker::PhantomData;
+
+use bytemuck::Pod;
+use crayfish_errors::Error;
+use crayfish_program::{program_error::ProgramError, pubkey::Pubkey, RawAccountInfo, Ref};
+
+use crate::{readable::Readable, FromAccountInfo, Owner, ReadableAccount};
+
+pub struct Account<'a, T>
+where
+    T: Owner + Pod,
+{
+    info: &'a RawAccountInfo,
+    _phantom: PhantomData<T>,
+}
+
+impl<'a, T> FromAccountInfo<'a> for Account<'a, T>
+where
+    T: Owner + Pod,
+{
+    fn try_from_info(info: &'a RawAccountInfo) -> Result<Self, ProgramError> {
+        if info.owner() != &T::owner() {
+            return Err(Error::AccountOwnedByWrongProgram.into());
+        }
+
+        Ok(Account {
+            info,
+            _phantom: PhantomData::default(),
+        })
+    }
+}
+
+impl<'a, T> AsRef<RawAccountInfo> for Account<'a, T>
+where
+    T: Owner + Pod,
+{
+    fn as_ref(&self) -> &RawAccountInfo {
+        self.info
+    }
+}
+
+impl<'a, T> ReadableAccount for Account<'a, T>
+where
+    T: Owner + Pod,
+{
+    type DataType = T;
+
+    fn key(&self) -> &Pubkey {
+        self.info.key()
+    }
+
+    fn owner(&self) -> &Pubkey {
+        self.info.owner()
+    }
+
+    fn lamports(&self) -> Result<Ref<u64>, ProgramError> {
+        self.info.try_borrow_lamports()
+    }
+
+    fn data(&self) -> Result<Ref<Self::DataType>, ProgramError> {
+        let data = self.info.try_borrow_data()?;
+
+        Ok(
+            Ref::filter_map(data, |data| T::read(data))
+                .map_err(|_| Error::CannotDeserializeData)?,
+        )
+    }
+}
