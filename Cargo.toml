@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/*", "examples/counter"]
+members = ["crates/*", "examples/*"]
 resolver = "2"
 
 [workspace.package]
@@ -12,11 +12,13 @@ repository = "https://github.com/rust-lang/rust-analyzer"
 
 [workspace.dependencies]
 bytemuck = "1.19"
+cargo-manifest = "0.16"
 crayfish-accounts = { version = "0.1.0", path = "crates/accounts" }
 crayfish-context = { version = "0.1.0", path = "crates/context" }
 crayfish-context-macro = { version = "0.1.0", path = "crates/context-macro" }
 crayfish-errors = { version = "0.1.0", path = "crates/errors" }
 crayfish-handler-macro = { version = "0.1.0", path = "crates/handler-macro" }
+crayfish-metadata-extractor = { version = "0.1.0", path = "crates/metadata-extractor" }
 crayfish-program = { version = "0.1.0", path = "crates/program" }
 crayfish-space-macro = { version = "0.1.0", path = "crates/space-macro" }
 crayfish-syn = { version = "0.1.0", path = "crates/syn" }

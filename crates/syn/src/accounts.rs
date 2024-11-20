@@ -1,8 +1,6 @@
 use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{
-    spanned::Spanned, visit::Visit, Field, Ident, Path, PathArguments, PathSegment, Type, TypePath,
-};
+use syn::{spanned::Spanned, visit::Visit, Field, Ident, PathSegment, Type, TypePath};
 
 use crate::doc::Docs;
 

@@ -1,0 +1,16 @@
+[package]
+name = "crayfish-metadata-extractor"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+cargo-manifest.workspace = true
+syn = { workspace = true, features = [
+    "full",
+    "visit",
+    "extra-traits",
+] } #TODO remove extra-traits
