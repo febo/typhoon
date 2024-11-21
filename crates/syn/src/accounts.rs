@@ -60,9 +60,8 @@ pub struct Assign<'a>(Vec<(&'a Ident, &'a PathSegment)>);
 impl<'a> ToTokens for Assign<'a> {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let assign_fields = self.0.iter().map(|(name, ty)| {
-            let ty_ident = &ty.ident;
             quote! {
-                let #name: #ty = <#ty_ident as crayfish_accounts::FromAccountInfo>::try_from_info(#name)?;
+                let #name: #ty = <#ty as crayfish_accounts::FromAccountInfo>::try_from_info(#name)?;
             }
         });
 
