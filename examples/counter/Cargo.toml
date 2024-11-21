@@ -19,3 +19,4 @@ crayfish-context.workspace = true
 crayfish-context-macro.workspace = true
 crayfish-handler-macro.workspace = true
 crayfish-program = { workspace = true, features = ["pinocchio"] }
+crayfish-program-id-macro.workspace = true

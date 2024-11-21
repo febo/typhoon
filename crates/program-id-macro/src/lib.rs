@@ -1,1 +1,72 @@
+use std::env::var;
 
+use cargo_manifest::Manifest;
+use heck::ToUpperCamelCase;
+use proc_macro::TokenStream;
+use proc_macro2::Span;
+use quote::{quote, ToTokens};
+use syn::{parse::Parse, parse_macro_input, Ident, LitStr};
+
+#[proc_macro]
+pub fn program_id(item: TokenStream) -> TokenStream {
+    parse_macro_input!(item as ProgramId)
+        .to_token_stream()
+        .into()
+}
+
+struct ProgramId {
+    pub name: Ident,
+    pub id: String,
+}
+
+impl Parse for ProgramId {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let id: LitStr = input.parse()?;
+        let name = generate_name()?;
+
+        Ok(ProgramId {
+            id: id.value(),
+            name,
+        })
+    }
+}
+
+impl ToTokens for ProgramId {
+    fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+        let id = &self.id;
+        let name = &self.name;
+
+        quote! {
+            crayfish_program::declare_id!(#id);
+
+            pub struct #name;
+
+            impl crayfish_accounts::ProgramId for #name {
+                const ID: crayfish_program::Pubkey = crate::ID;
+            }
+        }
+        .to_tokens(tokens);
+    }
+}
+
+fn get_cargo_toml() -> syn::Result<String> {
+    let crate_dir = var("CARGO_MANIFEST_DIR")
+        .map_err(|_| syn::Error::new(Span::call_site(), "Not in valid rust project."))?;
+
+    Ok(format!("{crate_dir}/Cargo.toml"))
+}
+
+fn generate_name() -> syn::Result<Ident> {
+    let cargo_toml = get_cargo_toml()?;
+    let manifest = Manifest::from_path(cargo_toml)
+        .map_err(|_| syn::Error::new(Span::call_site(), "Invalid Cargo.toml"))?;
+    let package_section = manifest.package.ok_or(syn::Error::new(
+        Span::call_site(),
+        "Invalid package section",
+    ))?;
+
+    Ok(Ident::new(
+        &format!("{}Program", package_section.name.to_upper_camel_case()),
+        Span::call_site(),
+    ))
+}

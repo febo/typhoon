@@ -1,16 +1,10 @@
-use crayfish_accounts::{Owner, ProgramId, SystemAccount};
+use crayfish_accounts::{Owner, SystemAccount};
 use crayfish_context_macro::context;
 use crayfish_handler_macro::handlers;
-use pinocchio::{entrypoint, msg, program_error::ProgramError, pubkey::Pubkey};
-use pinocchio_pubkey::declare_id;
+use crayfish_program_id_macro::program_id;
+use pinocchio::{entrypoint, msg, program_error::ProgramError};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
-pub struct CounterProgram;
-
-impl ProgramId for CounterProgram {
-    const ID: Pubkey = crate::ID;
-}
+program_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[context]
 pub struct InitContext<'a> {

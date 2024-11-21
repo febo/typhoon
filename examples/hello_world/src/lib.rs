@@ -1,15 +1,8 @@
-use crayfish_accounts::ProgramId;
 use crayfish_handler_macro::handlers;
-use pinocchio::{entrypoint, msg, program_error::ProgramError, pubkey::Pubkey};
-use pinocchio_pubkey::declare_id;
+use crayfish_program_id_macro::program_id;
+use pinocchio::{entrypoint, msg, program_error::ProgramError};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
-pub struct HelloWorldProgram;
-
-impl ProgramId for HelloWorldProgram {
-    const ID: Pubkey = crate::ID;
-}
+program_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 handlers! {
     hello_world,

@@ -9,9 +9,10 @@ repository.workspace = true
 
 [features]
 default = ["solana-nostd-entrypoint"]
-pinocchio = ["dep:pinocchio", "pinocchio-system"]
+pinocchio = ["dep:pinocchio", "pinocchio-system", "pinocchio-pubkey"]
 
 [dependencies]
 pinocchio = { workspace = true, optional = true }
+pinocchio-pubkey = { workspace = true, optional = true }
 pinocchio-system = { workspace = true, optional = true }
 solana-nostd-entrypoint = { workspace = true, optional = true }

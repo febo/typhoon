@@ -20,8 +20,10 @@ crayfish-errors = { version = "0.1.0", path = "crates/errors" }
 crayfish-handler-macro = { version = "0.1.0", path = "crates/handler-macro" }
 crayfish-metadata-extractor = { version = "0.1.0", path = "crates/metadata-extractor" }
 crayfish-program = { version = "0.1.0", path = "crates/program" }
+crayfish-program-id-macro = { version = "0.1.0", path = "crates/program-id-macro" }
 crayfish-space-macro = { version = "0.1.0", path = "crates/space-macro" }
 crayfish-syn = { version = "0.1.0", path = "crates/syn" }
+heck = "0.5.0"
 num-traits = "0.2"
 paste = "1.0"
 pinocchio = { git = "https://github.com/febo/pinocchio" }
