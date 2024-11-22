@@ -10,6 +10,7 @@ program_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[context]
 pub struct InitContext<'a> {
+    // #[account(init)]
     pub system: Program<'a, System>,
 }
 

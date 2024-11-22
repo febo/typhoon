@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{mem::size_of, ops::Deref};
 
 use bytemuck::Pod;
 use crayfish_program::{program_error::ProgramError, RawAccountInfo};

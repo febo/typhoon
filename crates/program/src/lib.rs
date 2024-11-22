@@ -1,6 +1,8 @@
 #[cfg(not(feature = "pinocchio"))]
 mod vanilla;
 
+use std::mem::size_of;
+
 #[cfg(not(feature = "pinocchio"))]
 pub use vanilla::*;
 

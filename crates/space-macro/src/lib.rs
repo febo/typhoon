@@ -107,15 +107,15 @@ fn expr_from_ty(value: Type, args: &mut Vec<Arg>) -> syn::Result<Expr> {
             };
             let ident = &segment.ident;
 
-            match ident.to_string().as_str() {
-                "String" => {
+            match ident {
+                i if i == "String" => {
                     let Some(arg_value) = arg else {
                         return Err(syn::Error::new(ident.span(), "No max_len specified."));
                     };
 
                     Ok(parse_quote!((4 + #arg_value)))
                 }
-                "Vec" => {
+                i if i == "Vec" => {
                     let Some(arg_value) = arg else {
                         return Err(syn::Error::new(ident.span(), "No max_len specified."));
                     };

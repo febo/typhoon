@@ -1,6 +1,8 @@
 use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{spanned::Spanned, Field, Ident, PathSegment, Type, TypePath};
+use syn::{spanned::Spanned, visit::Visit, Field, Ident, PathSegment, Type, TypePath};
+
+use crate::constraints::{ConstraintList, Constraints};
 
 pub struct Account {
     name: Ident,
@@ -12,8 +14,10 @@ impl TryFrom<&Field> for Account {
     type Error = syn::Error;
 
     fn try_from(value: &Field) -> Result<Self, Self::Error> {
+        let mut constraints = Constraints::default();
         for attr in &value.attrs {
             //Add constraintes here
+            constraints.visit_attribute(attr);
         }
 
         let segment = match &value.ty {
