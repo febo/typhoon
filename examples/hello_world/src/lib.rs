@@ -10,5 +10,6 @@ handlers! {
 
 pub fn hello_world() -> Result<(), ProgramError> {
     msg!("Hello World");
+
     Ok(())
 }

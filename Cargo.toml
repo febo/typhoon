@@ -27,6 +27,7 @@ crayfish-space = { version = "0.1.0", path = "crates/space" }
 crayfish-space-macro = { version = "0.1.0", path = "crates/space-macro" }
 crayfish-syn = { version = "0.1.0", path = "crates/syn" }
 heck = "0.5.0"
+litesvm = "0.3.0"
 nostd-system-program = { git = "https://github.com/Aursen/nostdinfo-programs" }
 num-traits = "0.2"
 paste = "1.0"
@@ -37,5 +38,6 @@ proc-macro2 = "1.0"
 quote = "1.0"
 solana-nostd-entrypoint = { git = "https://github.com/Aursen/solana-nostd-entrypoint", branch = "temp" }
 solana-program = "1.18"
+solana-sdk = "2.0"
 syn = "2.0"
 thiserror = "1.0"

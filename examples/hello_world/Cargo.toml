@@ -19,3 +19,7 @@ crayfish-context-macro.workspace = true
 crayfish-handler-macro.workspace = true
 crayfish-program = { workspace = true, features = ["pinocchio"] }
 crayfish-program-id-macro.workspace = true
+
+[dev-dependencies]
+litesvm.workspace = true
+solana-sdk.workspace = true
