@@ -25,7 +25,7 @@ where
 
         Ok(Account {
             info,
-            _phantom: PhantomData::default(),
+            _phantom: PhantomData,
         })
     }
 }

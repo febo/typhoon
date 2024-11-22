@@ -45,7 +45,7 @@ fn extract_ident<'a>(item_impl: &'a syn::ItemImpl, trait_name: &str) -> Option<&
     }
 }
 
-fn extract_instruction_idents<'a>(item_fn: &'a ItemFn) -> Option<Vec<&'a Ident>> {
+fn extract_instruction_idents(item_fn: &ItemFn) -> Option<Vec<&Ident>> {
     // Check if it's the process_instruction function
     if item_fn.sig.ident != "process_instruction" {
         return None;

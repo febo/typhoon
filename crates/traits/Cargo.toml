@@ -8,5 +8,6 @@ authors.workspace = true
 repository.workspace = true
 
 [dependencies]
+bytemuck.workspace = true
 crayfish-accounts.workspace = true
 crayfish-program.workspace = true

@@ -1,7 +1,9 @@
-use crayfish_accounts::{Owner, Program, System};
+use crayfish_account_macro::account;
+use crayfish_accounts::{Program, System};
 use crayfish_context_macro::context;
 use crayfish_handler_macro::handlers;
 use crayfish_program_id_macro::program_id;
+use crayfish_space::Space;
 use pinocchio::{entrypoint, msg, program_error::ProgramError};
 
 program_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -24,12 +26,8 @@ pub fn initialize() -> Result<(), ProgramError> {
     Ok(())
 }
 
+#[account]
+#[derive(Space)]
 pub struct Counter {
     pub count: u64,
-}
-
-impl Owner for Counter {
-    fn owner() -> pinocchio::pubkey::Pubkey {
-        crate::ID
-    }
 }

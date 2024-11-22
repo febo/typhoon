@@ -1,12 +1,9 @@
 use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
-use syn::{spanned::Spanned, visit::Visit, Field, Ident, PathSegment, Type, TypePath};
-
-use crate::doc::Docs;
+use syn::{spanned::Spanned, Field, Ident, PathSegment, Type, TypePath};
 
 pub struct Account {
     name: Ident,
-    docs: Docs,
     constraints: Vec<String>,
     ty: PathSegment,
 }
@@ -15,10 +12,7 @@ impl TryFrom<&Field> for Account {
     type Error = syn::Error;
 
     fn try_from(value: &Field) -> Result<Self, Self::Error> {
-        let mut docs = Docs::default();
-
         for attr in &value.attrs {
-            docs.visit_attribute(&attr);
             //Add constraintes here
         }
 
@@ -35,7 +29,6 @@ impl TryFrom<&Field> for Account {
 
         Ok(Account {
             name,
-            docs,
             constraints: vec![],
             ty: segment.clone(),
         })

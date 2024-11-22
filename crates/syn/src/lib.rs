@@ -5,7 +5,6 @@ use syn::{parse::Parse, spanned::Spanned, Generics, Ident, Item, Lifetime};
 
 mod accounts;
 mod constraints;
-mod doc;
 mod lifetime;
 
 pub struct ContextAttributes {
@@ -26,7 +25,7 @@ pub struct Context {
     item: Item,
     accounts: Accounts,
 }
-impl<'a> Parse for Context {
+impl Parse for Context {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         let item: Item = input.parse()?;
 
@@ -35,7 +34,7 @@ impl<'a> Parse for Context {
                 let accounts = item_struct
                     .fields
                     .iter()
-                    .map(|el| Account::try_from(el))
+                    .map(Account::try_from)
                     .collect::<Result<Vec<Account>, syn::Error>>()?;
 
                 Ok(Context {
@@ -54,7 +53,7 @@ impl<'a> Parse for Context {
     }
 }
 
-impl<'a> ToTokens for Context {
+impl ToTokens for Context {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let base_item = &self.item;
         let name = &self.ident;

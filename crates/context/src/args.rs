@@ -31,7 +31,7 @@ where
         instruction_data: &mut &'a [u8],
     ) -> Result<Self, ProgramError> {
         let arg: &T = bytemuck::try_from_bytes(instruction_data)
-            .map_err(|err| ProgramError::AccountBorrowFailed)?; //TODO
+            .map_err(|_err| ProgramError::AccountBorrowFailed)?; //TODO
 
         let (_, remaining) = instruction_data.split_at(size_of::<T>());
         *instruction_data = remaining;

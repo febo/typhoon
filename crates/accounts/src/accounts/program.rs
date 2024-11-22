@@ -32,7 +32,7 @@ where
 
         Ok(Program {
             info,
-            _phantom: PhantomData::default(),
+            _phantom: PhantomData,
         })
     }
 }

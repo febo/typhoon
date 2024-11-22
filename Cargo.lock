@@ -464,12 +464,14 @@ name = "counter"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "crayfish-account-macro",
  "crayfish-accounts",
  "crayfish-context",
  "crayfish-context-macro",
  "crayfish-handler-macro",
  "crayfish-program",
  "crayfish-program-id-macro",
+ "crayfish-space",
  "pinocchio",
  "pinocchio-pubkey",
 ]
@@ -481,6 +483,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "608697df725056feaccfa42cffdaeeec3fccc4ffc38358ecd19b243e716a78e0"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "crayfish-account-macro"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn 2.0.85",
 ]
 
 [[package]]
@@ -511,6 +521,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "crayfish-cpi-generator"
+version = "0.1.0"
+
+[[package]]
 name = "crayfish-errors"
 version = "0.1.0"
 dependencies = [
@@ -531,6 +545,9 @@ dependencies = [
 [[package]]
 name = "crayfish-idl-generator"
 version = "0.1.0"
+dependencies = [
+ "crayfish-metadata-extractor",
+]
 
 [[package]]
 name = "crayfish-metadata-extractor"
@@ -544,10 +561,11 @@ dependencies = [
 name = "crayfish-program"
 version = "0.1.0"
 dependencies = [
+ "nostd-system-program",
  "pinocchio",
  "pinocchio-pubkey",
  "pinocchio-system",
- "solana-nostd-entrypoint",
+ "solana-nostd-entrypoint 0.5.0",
 ]
 
 [[package]]
@@ -591,6 +609,7 @@ dependencies = [
 name = "crayfish-traits"
 version = "0.1.0"
 dependencies = [
+ "bytemuck",
  "crayfish-accounts",
  "crayfish-program",
 ]
@@ -1005,6 +1024,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "nostd-entrypoint-invoke"
+version = "0.1.0"
+source = "git+https://github.com/Aursen/nostdinfo-programs#274906c4c3d18f6fa9e3fe8d286106c395ed45b4"
+dependencies = [
+ "solana-nostd-entrypoint 0.6.0",
+ "solana-program",
+]
+
+[[package]]
+name = "nostd-system-program"
+version = "0.1.0"
+source = "git+https://github.com/Aursen/nostdinfo-programs#274906c4c3d18f6fa9e3fe8d286106c395ed45b4"
+dependencies = [
+ "nostd-entrypoint-invoke",
+ "solana-nostd-entrypoint 0.6.0",
+ "solana-program",
 ]
 
 [[package]]
@@ -1482,6 +1520,14 @@ dependencies = [
 name = "solana-nostd-entrypoint"
 version = "0.5.0"
 source = "git+https://github.com/Aursen/solana-nostd-entrypoint?branch=temp#e6d850780c23550a4f1dfe8711ba265b4dc8a92f"
+dependencies = [
+ "solana-program",
+]
+
+[[package]]
+name = "solana-nostd-entrypoint"
+version = "0.6.0"
+source = "git+https://github.com/Aursen/solana-nostd-entrypoint#59856f0fd551845080482d64235914a0c4c7341a"
 dependencies = [
  "solana-program",
 ]

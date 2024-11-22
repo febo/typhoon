@@ -1,5 +1,5 @@
 [package]
-name = "crayfish-idl-generator"
+name = "crayfish-account-macro"
 version.workspace = true
 rust-version.workspace = true
 edition.workspace = true
@@ -7,5 +7,9 @@ license.workspace = true
 authors.workspace = true
 repository.workspace = true
 
+[lib]
+proc-macro = true
+
 [dependencies]
-crayfish-metadata-extractor.workspace = true
+syn.workspace = true
+quote.workspace = true

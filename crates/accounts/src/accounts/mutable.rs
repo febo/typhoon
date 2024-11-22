@@ -18,7 +18,7 @@ where
     }
 }
 
-impl<'a, T> AsRef<RawAccountInfo> for Mut<T>
+impl<T> AsRef<RawAccountInfo> for Mut<T>
 where
     T: ReadableAccount + AsRef<RawAccountInfo>,
 {
@@ -65,7 +65,7 @@ where
     fn mut_data(&self) -> Result<RefMut<Self::DataType>, ProgramError> {
         let data = self.0.as_ref().try_borrow_mut_data()?;
 
-        Ok(RefMut::filter_map(data, |data| T::DataType::read_mut(data))
+        Ok(RefMut::filter_map(data, T::DataType::read_mut)
             .map_err(|_| Error::CannotDeserializeData)?)
     }
 }
