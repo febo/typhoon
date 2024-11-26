@@ -2,9 +2,7 @@ use accounts::{Account, Accounts};
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::{quote, ToTokens};
-use syn::{
-    fold::Fold, parse::Parse, parse_macro_input, spanned::Spanned, Generics, Ident, Item, Lifetime,
-};
+use syn::{parse::Parse, parse_macro_input, spanned::Spanned, Generics, Ident, Item, Lifetime};
 
 mod accounts;
 mod constraints;
@@ -17,15 +15,15 @@ pub fn context(_attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(context.into_token_stream())
 }
 
-struct ContextAttributes {
-    args: Vec<String>,
-}
+// struct ContextAttributes {
+//     args: Vec<String>,
+// }
 
-impl Fold for ContextAttributes {
-    fn fold_item_struct(&mut self, _: syn::ItemStruct) -> syn::ItemStruct {
-        todo!()
-    }
-}
+// impl Fold for ContextAttributes {
+//     fn fold_item_struct(&mut self, _: syn::ItemStruct) -> syn::ItemStruct {
+//         todo!()
+//     }
+// }
 
 struct Context {
     ident: Ident,
@@ -38,10 +36,10 @@ impl Parse for Context {
         let item: Item = input.parse()?;
 
         match item {
-            Item::Struct(item_struct) => {
+            Item::Struct(mut item_struct) => {
                 let accounts = item_struct
                     .fields
-                    .iter()
+                    .iter_mut()
                     .map(Account::try_from)
                     .collect::<Result<Vec<Account>, syn::Error>>()?;
 
