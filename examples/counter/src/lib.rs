@@ -4,8 +4,7 @@ use {
     crayfish_context_macro::context,
     crayfish_handler_macro::handlers,
     crayfish_program_id_macro::program_id,
-    crayfish_space::{InitSpace, Space},
-    pinocchio::{entrypoint, msg, program_error::ProgramError},
+    pinocchio::{entrypoint, program_error::ProgramError},
 };
 
 program_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -16,7 +15,7 @@ pub struct InitContext {
     #[constraint(
         init,
         payer = payer,
-        space = Counter::INIT_SPACE
+        space = Counter::SPACE
     )]
     pub counter: Mut<Account<Counter>>,
     pub system: Program<System>,
@@ -43,7 +42,10 @@ pub fn increment(IncrementContext { counter }: IncrementContext) -> Result<(), P
 }
 
 #[account]
-#[derive(Space)]
 pub struct Counter {
     pub count: u64,
+}
+
+impl Counter {
+    const SPACE: usize = std::mem::size_of::<Counter>();
 }
