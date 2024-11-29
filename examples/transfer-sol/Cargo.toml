@@ -1,5 +1,5 @@
 [package]
-name = "hello-world"
+name = "transfer_sol"
 version = "0.1.0"
 edition = "2021"
 publish = false
@@ -17,11 +17,14 @@ crayfish-context.workspace = true
 crayfish-context-macro.workspace = true
 crayfish-handler-macro.workspace = true
 crayfish-program.workspace = true
+crayfish-traits.workspace = true
 crayfish-program-id-macro.workspace = true
 pinocchio = { workspace = true, optional = true }
 solana-nostd-entrypoint = { workspace = true, optional = true }
 solana-program = { workspace = true, optional = true }
 
 [dev-dependencies]
+aligned.workspace = true
+bytemuck.workspace = true
 litesvm.workspace = true
 solana-sdk.workspace = true
