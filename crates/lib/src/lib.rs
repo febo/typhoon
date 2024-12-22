@@ -1,7 +1,7 @@
 pub mod macros {
     pub use {
-        typhoon_account_macro::*, typhoon_context_macro::*, typhoon_handler_macro::*,
-        typhoon_program_id_macro::*,
+        typhoon_account_macro::*, typhoon_context_macro::*, typhoon_cpi_generator_macro::*,
+        typhoon_handler_macro::*, typhoon_program_id_macro::*,
     };
 }
 
@@ -10,7 +10,7 @@ pub mod program {
 }
 
 pub mod lib {
-    pub use {typhoon_accounts::*, typhoon_context::*, typhoon_traits::*};
+    pub use {typhoon_accounts::*, typhoon_context::*, typhoon_errors::*, typhoon_traits::*};
 }
 
 pub mod prelude {
