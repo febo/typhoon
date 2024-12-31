@@ -1,15 +1,16 @@
 use {
-    crate::constraints::Constraints,
+    crate::{constraints::Constraints, extractor::AccountExtractor},
     proc_macro2::{Span, TokenStream},
     quote::{quote, ToTokens},
     std::ops::Deref,
     syn::{spanned::Spanned, visit_mut::VisitMut, Field, Ident, PathSegment, Type, TypePath},
 };
 
+#[derive(Clone)]
 pub struct Account {
-    name: Ident,
-    constraints: Constraints,
-    ty: PathSegment,
+    pub(crate) name: Ident,
+    pub(crate) constraints: Constraints,
+    pub(crate) ty: PathSegment,
 }
 
 impl TryFrom<&mut Field> for Account {
@@ -72,12 +73,45 @@ impl ToTokens for Assign<'_> {
                     return syn::Error::new(name.span(), "Not found payer or space for the init constraint").to_compile_error()
                 };
 
-                quote! {
-                    let #name: #ty = {
-                        let system_acc = <Mut<SystemAccount> as FromAccountInfo>::try_from_info(#name)?;
-                        SystemCpi::create_account(&system_acc, &#payer, &crate::ID, #space as u64, None)?;
-                        Mut::try_from_info(#name)?
+                if let Some(punctuated_seeds) = c.get_seeds() {
+                    quote! {
+                        let #name: #ty = {
+                            let system_acc = <typhoon::lib::Mut<typhoon::lib::SystemAccount> as typhoon::lib::FromAccountInfo>::try_from_info(#name)?;
+                            // TODO: avoid reusing seeds here and in verifications
+                            let signer_seeds = [#punctuated_seeds, &[bumps.#name as u8]];
+                            let seeds_vec = &signer_seeds.into_iter().map(|seed| typhoon_program::SignerSeed::from(seed)).collect::<Vec<typhoon_program::SignerSeed>>()[..];
+                            let signer: typhoon_program::SignerSeeds = typhoon_program::SignerSeeds::from(&seeds_vec[..]);
+                            typhoon::lib::SystemCpi::create_account(&system_acc, &#payer, &crate::ID, #space as u64, Some(&[typhoon_program::SignerSeeds::from(signer)]))?;
+                            Mut::try_from_info(#name)?
+                        };
+                    }
+                } else if c.is_seeded() {
+                    let Some(keys) = c.get_keys() else {
+                        return syn::Error::new(name.span(), "Seeded accounts require `keys` to be passed on init").to_compile_error()
                     };
+
+                    let account_ty = AccountExtractor(ty).get_account_type();
+
+                    quote! {
+                        let #name: #ty = {
+                            let system_acc = <typhoon::lib::Mut<typhoon::lib::SystemAccount> as typhoon::lib::FromAccountInfo>::try_from_info(#name)?;
+                            // TODO: avoid reusing seeds here and in verifications
+                            let bump = [bumps.#name as u8];
+                            let signer_seeds = #account_ty::derive_with_bump(#keys, &bump);
+                            let seeds_vec = &signer_seeds.into_iter().map(|seed| typhoon_program::SignerSeed::from(seed)).collect::<Vec<typhoon_program::SignerSeed>>()[..];
+                            let signer: typhoon_program::SignerSeeds = typhoon_program::SignerSeeds::from(&seeds_vec[..]);
+                            typhoon::lib::SystemCpi::create_account(&system_acc, &#payer, &crate::ID, #space as u64, Some(&[typhoon_program::SignerSeeds::from(signer)]))?;
+                            Mut::try_from_info(#name)?
+                        };
+                    }
+                } else {
+                    quote! {
+                        let #name: #ty = {
+                            let system_acc = <typhoon::lib::Mut<typhoon::lib::SystemAccount> as typhoon::lib::FromAccountInfo>::try_from_info(#name)?;
+                            typhoon::lib::SystemCpi::create_account(&system_acc, &#payer, &crate::ID, #space as u64, None)?;
+                            Mut::try_from_info(#name)?
+                        };
+                    }
                 }
             } else {
                 quote! {
@@ -89,7 +123,6 @@ impl ToTokens for Assign<'_> {
         let expanded = quote! {
             #(#assign_fields)*
         };
-
         expanded.to_tokens(tokens);
     }
 }
@@ -98,12 +131,12 @@ pub struct Accounts(pub Vec<Account>);
 
 impl Accounts {
     pub fn split_for_impl(&self) -> (NameList, Assign) {
-        let (name_list, assign): (Vec<&Ident>, Vec<(&Ident, &PathSegment, &Constraints)>) = self
+        let (names, assigns) = self
             .0
             .iter()
             .map(|el| (&el.name, (&el.name, &el.ty, &el.constraints)))
             .unzip();
 
-        (NameList(name_list), Assign(assign))
+        (NameList(names), Assign(assigns))
     }
 }

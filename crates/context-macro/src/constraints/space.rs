@@ -3,13 +3,14 @@ use syn::{
     Expr, Token,
 };
 
+#[derive(Clone)]
 pub struct ConstraintSpace {
     pub space: Expr,
 }
 
 impl Parse for ConstraintSpace {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        let _punct: Token![=] = input.parse()?;
+        input.parse::<Token![=]>()?;
         let space = input.parse()?;
 
         Ok(ConstraintSpace { space })

@@ -3,13 +3,14 @@ use syn::{
     Expr, Token,
 };
 
+#[derive(Clone)]
 pub struct ConstraintPayer {
     pub target: Expr,
 }
 
 impl Parse for ConstraintPayer {
     fn parse(input: ParseStream) -> syn::Result<Self> {
-        let _punct: Token![=] = input.parse()?;
+        input.parse::<Token![=]>()?;
         let target = input.parse()?;
 
         Ok(ConstraintPayer { target })

@@ -1,6 +1,7 @@
 use {
     accounts::{Account, Accounts},
     arguments::Arguments,
+    bumps::Bumps,
     injector::{FieldInjector, LifetimeInjector},
     proc_macro::TokenStream,
     quote::{format_ident, quote, ToTokens},
@@ -13,7 +14,9 @@ use {
 
 mod accounts;
 mod arguments;
+mod bumps;
 mod constraints;
+mod extractor;
 mod injector;
 mod remover;
 
@@ -29,6 +32,7 @@ struct Context {
     generics: Generics,
     item: Item,
     accounts: Accounts,
+    bumps: Option<Bumps>,
     args: Option<Arguments>,
 }
 impl Parse for Context {
@@ -54,18 +58,31 @@ impl Parse for Context {
                     .map(Account::try_from)
                     .collect::<Result<Vec<Account>, syn::Error>>()?;
 
+                let bumps = {
+                    if let Ok(bumps) = Bumps::try_from(&accounts) {
+                        if !bumps.0.is_empty() {
+                            Some(bumps)
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                };
+
                 Ok(Context {
                     ident: item_struct.ident.to_owned(),
                     generics: item_struct.generics.to_owned(),
                     item: Item::Struct(item_struct),
                     accounts: Accounts(accounts),
+                    bumps,
                     args,
                 })
             }
             Item::Enum(_item_enum) => todo!(), // TODO multiple context condition
             _ => Err(syn::Error::new(
                 item.span(),
-                "#[context] is only implemented for struct and enum",
+                "#[context] is only implemented for struct",
             )),
         }
     }
@@ -81,6 +98,7 @@ impl ToTokens for Context {
         let new_lifetime: Lifetime = parse_quote!('info);
         let (name_list, accounts_assign) = self.accounts.split_for_impl();
         let args_ident = format_ident!("args");
+        let bumps_ident = format_ident!("bumps");
 
         let mut struct_fields = name_list.to_owned();
 
@@ -104,7 +122,27 @@ impl ToTokens for Context {
             (None, None)
         };
 
+        let (bumps_struct, bumps_checks, bumps_assign) = if let Some(ref bumps) = self.bumps {
+            let bumps_name = bumps.get_name(name);
+            FieldInjector::new(parse_quote! {
+                pub bumps: #bumps_name
+            })
+            .visit_item_mut(account_struct);
+
+            let bumps_struct = bumps.generate_struct(name);
+            let checks = bumps.get_checks();
+            let assigns = bumps.get_assign(name);
+
+            struct_fields.push(&bumps_ident);
+
+            (Some(bumps_struct), Some(checks), Some(assigns))
+        } else {
+            (None, None, None)
+        };
+
         let expanded = quote! {
+            #bumps_struct
+
             #args_struct
 
             #account_struct
@@ -119,11 +157,14 @@ impl ToTokens for Context {
                     };
 
                     #args_assign
+                    #bumps_assign
                     #accounts_assign
+
+                    #bumps_checks
 
                     *accounts = rem;
 
-                    Ok(#name { #(#struct_fields),*})
+                    Ok(#name { #(#struct_fields),* })
                 }
             }
         };
