@@ -1,8 +1,6 @@
-use typhoon::lib::RefFromBytes;
 use {
     litesvm::LiteSVM,
     seeds::{Counter, InitContextArgs},
-    solana_sdk::pubkey,
     solana_sdk::{
         instruction::{AccountMeta, Instruction},
         native_token::LAMPORTS_PER_SOL,
@@ -13,6 +11,7 @@ use {
         transaction::Transaction,
     },
     std::path::PathBuf,
+    typhoon::lib::RefFromBytes,
 };
 
 fn read_program() -> Vec<u8> {
@@ -33,7 +32,7 @@ fn integration_test() {
     svm.airdrop(&random_kp.pubkey(), 10 * LAMPORTS_PER_SOL)
         .unwrap();
 
-    let program_id = pubkey!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+    let program_id = Pubkey::from_str_const("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
     let program_bytes = read_program();
 
     svm.add_program(program_id, &program_bytes);
