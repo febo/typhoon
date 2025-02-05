@@ -18,7 +18,7 @@ pub struct InitContext {
         seeds = [
             b"counter".as_ref(),
         ],
-        bump,
+        bump
     )]
     pub counter: Mut<Account<Counter>>,
     pub system: Program<System>,
