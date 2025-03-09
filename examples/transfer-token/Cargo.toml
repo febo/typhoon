@@ -1,0 +1,35 @@
+[package]
+name = "transfer_token"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = ["solana-nostd-entrypoint"]
+pinocchio = ["typhoon/pinocchio", "typhoon-token/pinocchio"]
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(target_os, values("solana"))',
+] }
+
+[dependencies]
+bytemuck = { version = "1.21.0", features = ["derive"] }
+solana-nostd-entrypoint = { git = "https://github.com/exotic-markets-labs/solana-nostd-entrypoint", rev = "bcccf73", optional = true }
+typhoon = { path = "../../crates/lib" }
+typhoon-token = { path = "../../crates/token" }
+
+[dev-dependencies]
+litesvm = "0.6.0"
+litesvm-token = "0.6.0"
+solana-instruction = "2.2.1"
+solana-keypair = "2.2.1"
+solana-native-token = "2.2.1"
+solana-pubkey = "2.2.1"
+solana-signer = "2.2.1"
+solana-system-interface = "1.0.0"
+solana-transaction = "2.2.1"
+spl-associated-token-account-client = "2.0.0"
