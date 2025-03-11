@@ -1,7 +1,7 @@
 use {
     typhoon_accounts::{
         Account, Discriminator, FromAccountInfo, Mut, Owner, RefFromBytes, Signer as SignerAccount,
-        SystemAccount, WritableAccount,
+        SystemAccount, UncheckedAccount, WritableAccount,
     },
     typhoon_program::{
         program_error::ProgramError,
@@ -64,3 +64,4 @@ where
 
 impl<'a> SystemCpi<'a> for Mut<SystemAccount<'a>> {}
 impl<'a> SystemCpi<'a> for Mut<SignerAccount<'a>> {}
+impl<'a> SystemCpi<'a> for Mut<UncheckedAccount<'a>> {}
