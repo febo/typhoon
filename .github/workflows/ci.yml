@@ -15,10 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
-      - name: Rustup install nightly
-        run: rustup toolchain install nightly
-      - name: Rustup install rustfmt
-        run: rustup component add rustfmt --toolchain nightly
+      - name: Rust install nightly
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: clippy, rustfmt
       - name: Run Cargo fmt
         run: cargo +nightly fmt --all -- --check
       - name: Run Cargo clippy
@@ -40,6 +40,8 @@ jobs:
             examples/seeded/ -> target
             examples/seeds/ -> target
             examples/transfer-sol/ -> target
+      - name: Rust install
+        uses: dtolnay/rust-toolchain@stable
       - name: Install cargo-make
         uses: baptiste0928/cargo-install@v3
         with:
@@ -49,12 +51,6 @@ jobs:
         run: |
           sh -c "$(curl -sSfL https://release.anza.xyz/v2.1.6/install)"
           echo "/home/runner/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
-      - name: Build for no-std
-        run: cargo make build
-      - name: Tests
-        run: cargo make test
-      - name: Build for pinocchio
-        run: cargo make build-pinocchio
       - name: Tests
         run: cargo make test
 
@@ -63,5 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
+      - name: Rust install
+        uses: dtolnay/rust-toolchain@stable
       - name: Run tests
         run: cargo test

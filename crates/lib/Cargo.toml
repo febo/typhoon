@@ -9,15 +9,9 @@ repository.workspace = true
 
 [features]
 borsh = ["typhoon-accounts/borsh"]
-pinocchio = [
-    "typhoon-accounts/pinocchio",
-    "typhoon-context/pinocchio",
-    "typhoon-errors/pinocchio",
-    "typhoon-program/pinocchio",
-    "typhoon-utility-traits/pinocchio",
-]
 
 [dependencies]
+pinocchio-pubkey.workspace = true
 typhoon-accounts.workspace = true
 typhoon-account-macro.workspace = true
 typhoon-errors.workspace = true
@@ -25,6 +19,10 @@ typhoon-context.workspace = true
 typhoon-context-macro.workspace = true
 typhoon-cpi-generator-macro.workspace = true
 typhoon-handler-macro.workspace = true
-typhoon-program.workspace = true
 typhoon-program-id-macro.workspace = true
+typhoon-utility.workspace = true
 typhoon-utility-traits.workspace = true
+# v1.9 specifies `rust-version = "1.84"`, which causes compatibility issues with Solana build
+# tools' Rust version (1.79.0 at the time of writing this comment).
+# TODO: Remove when the Solana version we use comes with Rust version >= 1.84
+bytemuck_derive = ">1.0.0, <1.9"
