@@ -17,6 +17,7 @@ mod extractor;
 mod generators;
 mod injector;
 mod remover;
+mod utils;
 mod visitor;
 
 #[proc_macro_attribute]
@@ -46,6 +47,7 @@ impl TokenGenerator {
             ConstraintGenerators::Args(ArgumentsGenerator::new(&context)),
             ConstraintGenerators::Assign(AssignGenerator::new(&context)),
             ConstraintGenerators::Rent(RentGenerator::new(&context)),
+            ConstraintGenerators::State(StateGenerator::new(&context)),
             ConstraintGenerators::Bumps(BumpsGenerator::new(&context)),
             ConstraintGenerators::HasOne(HasOneGenerator::new(&context)),
             ConstraintGenerators::Token(TokenAccountGenerator::new(&context)),
@@ -91,6 +93,7 @@ impl ToTokens for TokenGenerator {
 
             struct_fields.push(new_field.ident.as_ref().unwrap());
         }
+        let drop_vars = self.result.drop_vars.iter().map(|v| quote!(drop(#v);));
 
         let impl_context = quote! {
             impl #impl_generics HandlerContext<#new_lifetime> for #name #ty_generics #where_clause {
@@ -103,6 +106,8 @@ impl ToTokens for TokenGenerator {
                     };
 
                     #inside
+
+                    #(#drop_vars)*
 
                     *accounts = rem;
 
