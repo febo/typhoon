@@ -72,11 +72,15 @@ macro_rules! impl_error_logger {
     ($error:ident) => {
         #[cfg(feature = "logging")]
         #[cold]
-        fn log_error(error: &ErrorV2) {
+        fn log_error(error: &Error) {
             pinocchio::log::sol_log(error.to_str::<$error>());
 
             if let Some(account_name) = error.account_name() {
-                pinocchio::log::sol_log(&std::format!("Account origin: {account_name}"));
+                // TODO optimize this
+                let mut buffer: [u8; 50] = [0; 50];
+                buffer.copy_from_slice(b"Account origin: ");
+                buffer.copy_from_slice(account_name.as_bytes());
+                pinocchio::log::sol_log_slice(&buffer);
             }
         }
     };
