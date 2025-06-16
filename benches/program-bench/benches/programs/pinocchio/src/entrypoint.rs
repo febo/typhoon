@@ -1,10 +1,8 @@
 use {
-    crate::{
-        instruction::Instruction,
-        processor::{process_create_account, process_log, process_ping},
-    },
+    crate::processor::{process_create_account, process_log, process_ping},
     pinocchio::{
-        account_info::AccountInfo, entrypoint, nostd_panic_handler, pubkey::Pubkey, ProgramResult,
+        account_info::AccountInfo, entrypoint, nostd_panic_handler, program_error::ProgramError,
+        pubkey::Pubkey, ProgramResult,
     },
 };
 
@@ -18,11 +16,18 @@ pub fn process_instruction(
     accounts: &[AccountInfo],
     instruction_data: &[u8],
 ) -> ProgramResult {
-    let instruction = Instruction::unpack(instruction_data)?;
+    let [instruction, _remaining @ ..] = instruction_data else {
+        return Err(ProgramError::InvalidInstructionData);
+    };
 
-    match instruction {
-        Instruction::Ping => process_ping(),
-        Instruction::Log => process_log(),
-        Instruction::CreateAccount => process_create_account(accounts),
+    match *instruction {
+        // 0 - Ping
+        0 => process_ping(),
+        // 1 - Log
+        1 => process_log(),
+        // 2 - CreateAccount
+        2 => process_create_account(accounts),
+        // Invalid instruction
+        _ => Err(ProgramError::InvalidInstructionData),
     }
 }
