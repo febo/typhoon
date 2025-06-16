@@ -18,7 +18,7 @@ pub fn process_instruction(
     accounts: &[AccountInfo],
     instruction_data: &[u8],
 ) -> ProgramResult {
-    let instruction = Instruction::unpack(instruction_data)?;
+    let instruction = Instruction::try_from(instruction_data)?;
 
     match instruction {
         Instruction::Ping => process_ping(),

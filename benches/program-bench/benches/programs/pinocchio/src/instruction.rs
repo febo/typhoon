@@ -1,5 +1,7 @@
+use core::mem::transmute;
 use pinocchio::program_error::ProgramError;
 
+#[repr(u8)]
 #[derive(Clone, Debug)]
 #[rustfmt::skip]
 pub enum Instruction {
@@ -8,17 +10,16 @@ pub enum Instruction {
     CreateAccount,
 }
 
-impl Instruction {
-    /// Unpacks a byte buffer into a [Instruction](enum.Instruction.html).
-    #[inline(always)]
-    pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
-        match input.split_first() {
-            // 0 - Ping
-            Some((&0, [])) => Ok(Instruction::Ping),
-            // 1 - Log
-            Some((&1, [])) => Ok(Instruction::Log),
-            // 2 - CreateAccount
-            Some((&2, [])) => Ok(Instruction::CreateAccount),
+impl TryFrom<&[u8]> for Instruction {
+    type Error = ProgramError;
+
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        let [discriminator, _remaining @ ..] = value else {
+            return Err(ProgramError::InvalidInstructionData);
+        };
+
+        match *discriminator {
+            0..=2 => Ok(unsafe { transmute::<u8, Instruction>(*discriminator) }),
             _ => Err(ProgramError::InvalidInstructionData),
         }
     }
