@@ -762,16 +762,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "const-crypto"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c06f1eb05f06cf2e380fdded278fbf056a38974299d77960555a311dcf91a52"
-dependencies = [
- "keccak-const",
- "sha2-const-stable",
-]
-
-[[package]]
 name = "constant_time_eq"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1624,12 +1614,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "keccak-const"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57d8d8ce877200136358e0bbff3a77965875db3af755a11e1fa6b1b3e2df13ea"
-
-[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2063,12 +2047,12 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 [[package]]
 name = "pinocchio"
 version = "0.8.4"
-source = "git+https://github.com/anza-xyz/pinocchio.git#ca3a98bf37bf273c56bf5c71b9b3276d4c7dd857"
+source = "git+https://github.com/anza-xyz/pinocchio.git#3fecb3e569442e219185e5fe35854bfbf971e23a"
 
 [[package]]
 name = "pinocchio-associated-token-account"
 version = "0.1.1"
-source = "git+https://github.com/anza-xyz/pinocchio.git#ca3a98bf37bf273c56bf5c71b9b3276d4c7dd857"
+source = "git+https://github.com/anza-xyz/pinocchio.git#3fecb3e569442e219185e5fe35854bfbf971e23a"
 dependencies = [
  "pinocchio",
  "pinocchio-pubkey",
@@ -2077,16 +2061,17 @@ dependencies = [
 [[package]]
 name = "pinocchio-pubkey"
 version = "0.2.4"
-source = "git+https://github.com/anza-xyz/pinocchio.git#ca3a98bf37bf273c56bf5c71b9b3276d4c7dd857"
+source = "git+https://github.com/anza-xyz/pinocchio.git#3fecb3e569442e219185e5fe35854bfbf971e23a"
 dependencies = [
- "const-crypto",
+ "five8_const",
  "pinocchio",
+ "sha2-const-stable",
 ]
 
 [[package]]
 name = "pinocchio-system"
 version = "0.2.3"
-source = "git+https://github.com/anza-xyz/pinocchio.git#ca3a98bf37bf273c56bf5c71b9b3276d4c7dd857"
+source = "git+https://github.com/anza-xyz/pinocchio.git#3fecb3e569442e219185e5fe35854bfbf971e23a"
 dependencies = [
  "pinocchio",
  "pinocchio-pubkey",
@@ -2095,7 +2080,7 @@ dependencies = [
 [[package]]
 name = "pinocchio-token"
 version = "0.3.0"
-source = "git+https://github.com/anza-xyz/pinocchio.git#ca3a98bf37bf273c56bf5c71b9b3276d4c7dd857"
+source = "git+https://github.com/anza-xyz/pinocchio.git#3fecb3e569442e219185e5fe35854bfbf971e23a"
 dependencies = [
  "pinocchio",
  "pinocchio-pubkey",
