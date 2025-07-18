@@ -4601,6 +4601,7 @@ name = "typhoon-context-macro"
 version = "0.1.0-alpha.14"
 dependencies = [
  "bytemuck",
+ "pinocchio",
  "pinocchio-pubkey",
  "prettyplease",
  "proc-macro2",
